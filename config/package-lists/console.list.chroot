@@ -1,0 +1,29 @@
+seatd
+dbus-user-session
+polkitd
+cage
+xwayland
+# Audio, input, controllers
+pipewire
+wireplumber
+alsa-utils
+libinput-tools
+joystick
+bluez
+# Runtime libs often needed by Unity builds
+libgl1
+libegl1
+libgles2
+libx11-6
+libxext6
+libxkbcommon0
+libxcursor1
+libxi6
+libxinerama1
+libpulse0
+libasound2t64
+libudev1
+libstdc++6
+libxrandr2
+libxrender1
+libxss1

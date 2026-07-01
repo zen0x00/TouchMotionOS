@@ -1,0 +1,20 @@
+#!/bin/sh
+set -e
+lb config noauto \
+--mode debian \
+--distribution trixie \
+--architectures amd64 \
+--archive-areas "main contrib non-free-firmware" \
+--firmware-chroot true \
+--firmware-binary true \
+--binary-images iso-hybrid \
+--bootloaders "grub-pc grub-efi" \
+--debian-installer none \
+--apt-recommends false \
+--memtest none \
+--image-name touchmotion-console \
+--iso-application "TouchMotion Console" \
+--iso-publisher "TouchMotionRobotics" \
+--iso-volume "TM_CONSOLE" \
+--bootappend-live "boot=live components username=launcher hostname=tm-console locales=en_US.UTF-8 keyboard-layouts=us" \
+"${@}"

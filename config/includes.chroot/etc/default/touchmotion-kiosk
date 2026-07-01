@@ -1,0 +1,4 @@
+# TouchMotion kiosk defaults
+TOUCHMOTION_GAME_DIR=/opt/touchmotion-game
+# Optional explicit command. Leave empty to auto-detect a single Unity binary.
+TOUCHMOTION_GAME_CMD=

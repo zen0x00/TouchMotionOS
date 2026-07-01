@@ -1,0 +1,60 @@
+#!/bin/sh
+set -eu
+
+if [ -r /etc/default/touchmotion-kiosk ]; then
+    . /etc/default/touchmotion-kiosk
+fi
+
+game_dir="${TOUCHMOTION_GAME_DIR:-/opt/touchmotion-game}"
+game_cmd="${TOUCHMOTION_GAME_CMD:-}"
+
+if [ -n "$game_cmd" ]; then
+    printf '%s\n' "$game_cmd"
+    exit 0
+fi
+
+if [ ! -d "$game_dir" ]; then
+    exit 1
+fi
+
+count=0
+found=""
+
+for path in "$game_dir"/*.x86_64; do
+    [ -e "$path" ] || continue
+    [ -f "$path" ] || continue
+    if [ ! -x "$path" ]; then
+        chmod +x "$path" 2>/dev/null || true
+    fi
+    count=$((count + 1))
+    found="$path"
+done
+
+if [ "$count" -eq 1 ]; then
+    printf '%s\n' "$found"
+    exit 0
+fi
+
+if [ "$count" -gt 1 ]; then
+    exit 2
+fi
+
+for path in "$game_dir"/*; do
+    [ -e "$path" ] || continue
+    [ -f "$path" ] || continue
+    [ -x "$path" ] || continue
+    case "$path" in
+        *.sh|*.log|*.txt)
+            continue
+            ;;
+    esac
+    count=$((count + 1))
+    found="$path"
+done
+
+if [ "$count" -eq 1 ]; then
+    printf '%s\n' "$found"
+    exit 0
+fi
+
+exit 1

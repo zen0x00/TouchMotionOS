@@ -1,0 +1,4 @@
+#!/bin/sh
+set -e
+lb clean noauto --purge
+rm -f *.iso *.img *.contents *.packages *.buildlog build.log
