@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
+import '../widgets/power_button.dart';
+
 class AppShell extends StatelessWidget {
   const AppShell({
     super.key,
@@ -25,6 +27,15 @@ class AppShell extends StatelessWidget {
             ),
             labelType: NavigationRailLabelType.none,
             minWidth: 88,
+            trailing: const Expanded(
+              child: Align(
+                alignment: Alignment.bottomCenter,
+                child: Padding(
+                  padding: EdgeInsets.only(bottom: 24),
+                  child: PowerButton(),
+                ),
+              ),
+            ),
             selectedIconTheme: const IconThemeData(size: 32, color: Colors.white),
             unselectedIconTheme:
                 IconThemeData(size: 26, color: Colors.white.withValues(alpha: 0.5)),
