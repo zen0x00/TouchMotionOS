@@ -1,3 +1,25 @@
 .agents/
 .codex/
 .build/
+
+# nix
+result
+result-*
+/nixos.qcow2
+/serial.log
+
+# rust
+platform/target/
+
+# flutter / dart
+launcher/.dart_tool/
+launcher/.flutter-plugins
+launcher/.flutter-plugins-dependencies
+launcher/.packages
+launcher/build/
+launcher/.idea/
+launcher/*.iml
+
+# editors
+.vscode/
+.direnv/
