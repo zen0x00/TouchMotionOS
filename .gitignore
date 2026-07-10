@@ -23,3 +23,4 @@ launcher/*.iml
 # editors
 .vscode/
 .direnv/
+*.qcow2

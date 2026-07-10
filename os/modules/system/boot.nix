@@ -1,4 +1,4 @@
-{ ... }:
+{ lib, ... }:
 
 {
   fileSystems."/" = {
@@ -14,6 +14,9 @@
   boot.initrd.kernelModules = [ "virtio_gpu" ];
 
   virtualisation.vmVariant.virtualisation.qemu.options = [ "-vga none" "-device virtio-gpu-pci" ];
+  # Serial console on the kernel cmdline makes plymouth force its text
+  # "details" plugin on every display, so the graphical theme never loads.
+  virtualisation.vmVariant.virtualisation.qemu.consoles = lib.mkForce [ "tty0" ];
 
   boot.plymouth.enable = true;
   boot.kernelParams = [
