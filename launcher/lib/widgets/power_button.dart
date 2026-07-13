@@ -12,7 +12,7 @@ class PowerButton extends StatelessWidget {
     return PopupMenuButton<String>(
       tooltip: 'Power',
       color: const Color(0xFF1C1C1E),
-      icon: Icon(Icons.power_settings_new, color: Colors.white.withValues(alpha: 0.7)),
+      icon: Icon(Icons.power_settings_new, color: Colors.black.withValues(alpha: 0.7)),
       onSelected: _run,
       itemBuilder: (context) => const [
         PopupMenuItem(
