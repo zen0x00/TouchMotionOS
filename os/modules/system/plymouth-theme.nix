@@ -24,6 +24,16 @@ let
           'fun MessageCallback(text) {
     return;'
 
+      # Sprite position is computed once at script load, before the DRM
+      # display geometry is final, leaving the animation off-center.
+      # Recompute the centering every frame instead.
+      substituteInPlace $out/share/plymouth/themes/connect/connect.script \
+        --replace-fail \
+          'flyingman_sprite.SetImage(flyingman_image[Math.Int(progress / 2) % 120]);' \
+          'flyingman_sprite.SetImage(flyingman_image[Math.Int(progress / 2) % 120]);
+    flyingman_sprite.SetX(Window.GetX() + (Window.GetWidth(0) / 2 - flyingman_image[0].GetWidth() / 2));
+    flyingman_sprite.SetY(Window.GetY() + (Window.GetHeight(0) / 2 - flyingman_image[0].GetHeight() / 2));'
+
       # Theme ships with hardcoded FHS paths (/usr/share/...) that don't
       # exist on NixOS; plymouth silently falls back to the text "details"
       # plugin when it can't resolve them, which is what prints the OK lines.
