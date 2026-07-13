@@ -5,6 +5,7 @@
 # nix
 result
 result-*
+iso-result
 /nixos.qcow2
 /serial.log
 
