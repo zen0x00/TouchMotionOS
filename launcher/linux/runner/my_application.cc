@@ -16,7 +16,27 @@ G_DEFINE_TYPE(MyApplication, my_application, GTK_TYPE_APPLICATION)
 
 // Called when first Flutter frame received.
 static void first_frame_cb(MyApplication* self, FlView* view) {
-  gtk_widget_show(gtk_widget_get_toplevel(GTK_WIDGET(view)));
+  GtkWidget* toplevel = gtk_widget_get_toplevel(GTK_WIDGET(view));
+
+  // Re-query and force the real output size here, not at activate time.
+  // Under Wayland kiosk compositors (cage), no surface exists yet during
+  // activate, so GdkMonitor geometry is stale/wrong then. By first-frame
+  // the surface is mapped and geometry is accurate — force a resize now
+  // so FlView's buffer matches the real output instead of tiling to fill it.
+  GdkDisplay* display = gdk_display_get_default();
+  if (display != nullptr) {
+    GdkMonitor* monitor = gdk_display_get_primary_monitor(display);
+    if (monitor == nullptr) {
+      monitor = gdk_display_get_monitor(display, 0);
+    }
+    if (monitor != nullptr) {
+      GdkRectangle geometry;
+      gdk_monitor_get_geometry(monitor, &geometry);
+      gtk_window_resize(GTK_WINDOW(toplevel), geometry.width, geometry.height);
+    }
+  }
+
+  gtk_widget_show(toplevel);
 }
 
 // Implements GApplication::activate.
@@ -28,6 +48,24 @@ static void my_application_activate(GApplication* application) {
   // Kiosk mode: no title bar, no decorations, always fullscreen.
   gtk_window_set_title(window, "tomoro_launcher");
   gtk_window_set_decorated(window, FALSE);
+
+  // Size window to the screen before fullscreening. Without this, FlView's
+  // initial allocation defaults to GTK's small default size and the
+  // rendered buffer tiles/repeats to fill the fullscreen surface until a
+  // resize event corrects it.
+  GdkDisplay* display = gdk_display_get_default();
+  if (display != nullptr) {
+    GdkMonitor* monitor = gdk_display_get_primary_monitor(display);
+    if (monitor == nullptr) {
+      monitor = gdk_display_get_monitor(display, 0);
+    }
+    if (monitor != nullptr) {
+      GdkRectangle geometry;
+      gdk_monitor_get_geometry(monitor, &geometry);
+      gtk_window_set_default_size(window, geometry.width, geometry.height);
+    }
+  }
+
   gtk_window_fullscreen(window);
 
   g_autoptr(FlDartProject) project = fl_dart_project_new();
