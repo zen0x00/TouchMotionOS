@@ -18,6 +18,10 @@
     "virtio_gpu"
   ];
 
+  # Early KMS on Intel iGPU (NUC) so plymouth takes over the display in the
+  # initrd instead of leaving the firmware BGRT logo on efifb.
+  boot.initrd.kernelModules = [ "i915" ];
+
   hardware.enableRedistributableFirmware = true;
   nixpkgs.hostPlatform = "x86_64-linux";
 }
