@@ -12,7 +12,6 @@ in
 
   users.users.tomoro = {
     isNormalUser = true;
-    extraGroups = [ "wheel" ];
   };
 
   services.cage = {
