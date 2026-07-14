@@ -40,11 +40,13 @@ let
       read -rp "Erase $disk and install TOMORO OS? Type 'yes' to continue: " answer
       [ "$answer" = "yes" ] || exit 1
 
-      echo ">>> Partitioning $disk"
+      echo ">>> Partitioning $disk (A/B layout)"
       wipefs -a "$disk"
       sgdisk --zap-all "$disk"
       sgdisk -n1:0:+512MiB -t1:ef00 -c1:ESP "$disk"
-      sgdisk -n2:0:0 -t2:8300 -c2:root "$disk"
+      sgdisk -n2:0:+16GiB  -t2:8300 -c2:slot-a "$disk"
+      sgdisk -n3:0:+16GiB  -t3:8300 -c3:slot-b "$disk"
+      sgdisk -n4:0:0       -t4:8300 -c4:data "$disk"
       partprobe "$disk" || true
       udevadm settle
 
@@ -55,13 +57,16 @@ let
 
       echo ">>> Formatting"
       mkfs.fat -F32 -n TOMORO-ESP "''${disk}''${p}1"
-      mkfs.ext4 -F -L tomoro-root "''${disk}''${p}2"
+      mkfs.ext4 -F -L tomoro-a "''${disk}''${p}2"
+      mkfs.ext4 -F -L tomoro-b "''${disk}''${p}3"
+      mkfs.ext4 -F -L tomoro-data "''${disk}''${p}4"
       udevadm settle
 
-      echo ">>> Mounting"
-      mount /dev/disk/by-label/tomoro-root /mnt
-      mkdir -p /mnt/boot
+      echo ">>> Mounting slot A"
+      mount /dev/disk/by-label/tomoro-a /mnt
+      mkdir -p /mnt/boot /mnt/data
       mount /dev/disk/by-label/TOMORO-ESP /mnt/boot
+      mount /dev/disk/by-label/tomoro-data /mnt/data
 
       echo ">>> Installing pre-built TOMORO system (offline)"
       nixos-install --system ${applianceSystem} --no-root-passwd --no-channel-copy

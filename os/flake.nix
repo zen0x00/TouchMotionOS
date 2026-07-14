@@ -10,16 +10,24 @@
   outputs = { self, nixpkgs, disko }:
     let
       system = "x86_64-linux";
+
+      # A/B: same appliance config built twice, differing only in which
+      # system partition it mounts as /.
+      mkAppliance = slot: nixpkgs.lib.nixosSystem {
+        inherit system;
+        specialArgs = { inherit slot; };
+        modules = [
+          disko.nixosModules.disko
+          ./hosts/appliance
+        ];
+      };
     in
     {
       nixosConfigurations = {
-        appliance = nixpkgs.lib.nixosSystem {
-          inherit system;
-          modules = [
-            disko.nixosModules.disko
-            ./hosts/appliance
-          ];
-        };
+        # `appliance` = slot A; the installer ships this one.
+        appliance = mkAppliance "a";
+        appliance-a = mkAppliance "a";
+        appliance-b = mkAppliance "b";
 
         vm = nixpkgs.lib.nixosSystem {
           inherit system;
