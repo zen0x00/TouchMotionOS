@@ -21,16 +21,6 @@
           ];
         };
 
-        factory = nixpkgs.lib.nixosSystem {
-          inherit system;
-          modules = [ ./hosts/factory ];
-        };
-
-        recovery = nixpkgs.lib.nixosSystem {
-          inherit system;
-          modules = [ ./hosts/recovery ];
-        };
-
         vm = nixpkgs.lib.nixosSystem {
           inherit system;
           modules = [ ./hosts/vm ];
