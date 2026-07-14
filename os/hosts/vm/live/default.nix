@@ -3,9 +3,9 @@
 {
   imports = [
     "${modulesPath}/installer/cd-dvd/installation-cd-minimal.nix"
-    ../../modules/system/quiet-boot.nix
-    ../../modules/system/plymouth-theme.nix
-    ../../modules/kiosk
+    ../../../modules/system/quiet-boot.nix
+    ../../../modules/system/plymouth-theme.nix
+    ../../../modules/kiosk
   ];
 
   image.fileName = lib.mkForce "tomoro-live.iso";

@@ -42,7 +42,7 @@
 
         live = nixpkgs.lib.nixosSystem {
           inherit system;
-          modules = [ ./hosts/live ];
+          modules = [ ./hosts/vm/live ];
         };
       };
     };
