@@ -183,6 +183,9 @@ class AppLocalizationsTe extends AppLocalizations {
   }
 
   @override
+  String get language => 'భాష';
+
+  @override
   String get network => 'నెట్‌వర్క్';
 
   @override

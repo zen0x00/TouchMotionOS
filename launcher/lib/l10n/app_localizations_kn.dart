@@ -183,6 +183,9 @@ class AppLocalizationsKn extends AppLocalizations {
   }
 
   @override
+  String get language => 'ಭಾಷೆ';
+
+  @override
   String get network => 'ನೆಟ್‌ವರ್ಕ್';
 
   @override

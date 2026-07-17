@@ -55,9 +55,10 @@ class _OrganisationScreenState extends State<OrganisationScreen> {
     // TODO(backend): verify OTP against the API. Placeholder accepts 0000.
     if (_otp.join() == '0000') {
       Session.patientName = _selected;
-      Navigator.of(context).pushReplacement(
-        MaterialPageRoute(builder: (_) => const LanguageScreen()),
-      );
+      setState(() => _otp.clear());
+      Navigator.of(
+        context,
+      ).push(MaterialPageRoute(builder: (_) => const LanguageScreen()));
     } else {
       setState(() {
         _otp.clear();

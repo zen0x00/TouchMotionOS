@@ -189,6 +189,9 @@ class AppLocalizationsTa extends AppLocalizations {
   }
 
   @override
+  String get language => 'மொழி';
+
+  @override
   String get network => 'நெட்வொர்க்';
 
   @override

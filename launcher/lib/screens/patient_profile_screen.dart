@@ -71,6 +71,16 @@ class PatientProfileScreen extends StatelessWidget {
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                if (Navigator.of(context).canPop()) ...[
+                  Padding(
+                    padding: EdgeInsets.only(top: sy(20)),
+                    child: IconButton(
+                      icon: Icon(Icons.chevron_left, size: sy(44), color: _ink),
+                      onPressed: () => Navigator.of(context).pop(),
+                    ),
+                  ),
+                  SizedBox(width: sx(16)),
+                ],
                 CircleAvatar(
                   radius: sy(44),
                   backgroundColor: _lavenderDeep,
@@ -106,119 +116,121 @@ class PatientProfileScreen extends StatelessWidget {
             ),
           ),
 
-          // This week — routine calendar.
+          // Left column: week calendar above today's routine, flowing so
+          // neither card can overlap the other regardless of content height.
           Positioned(
             top: sy(240),
             left: sx(96),
             width: sx(1050),
-            child: _card(
-              sx,
-              sy,
-              title: l10n.yourWeek,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: List.generate(7, (i) {
-                  final done = _routineDone[i];
-                  final isToday = i == today;
-                  return Column(
-                    children: [
-                      Text(
-                        _weekdays(l10n)[i],
-                        style: TextStyle(
-                          color: _ink.withValues(alpha: isToday ? 1 : 0.45),
-                          fontSize: sy(22),
-                          fontWeight: isToday
-                              ? FontWeight.w800
-                              : FontWeight.w500,
-                        ),
-                      ),
-                      SizedBox(height: sy(12)),
-                      Container(
-                        width: sy(64),
-                        height: sy(64),
-                        decoration: BoxDecoration(
-                          color: done ? _ink : Colors.white,
-                          shape: BoxShape.circle,
-                          border: Border.all(
-                            color: isToday
-                                ? _ink
-                                : _ink.withValues(alpha: 0.15),
-                            width: isToday ? 2.2 : 1.3,
-                          ),
-                        ),
-                        child: done
-                            ? Icon(
-                                Icons.check,
-                                color: Colors.white,
-                                size: sy(32),
-                              )
-                            : null,
-                      ),
-                    ],
-                  );
-                }),
-              ),
-            ),
-          ),
-
-          // Today's prescription.
-          Positioned(
-            top: sy(470),
-            left: sx(96),
-            width: sx(1050),
-            child: _card(
-              sx,
-              sy,
-              title: l10n.todaysRoutine,
-              child: Column(
-                children: [
-                  for (final (name, detail) in _prescription(l10n))
-                    Padding(
-                      padding: EdgeInsets.symmetric(vertical: sy(10)),
-                      child: Row(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                _card(
+                  sx,
+                  sy,
+                  title: l10n.yourWeek,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: List.generate(7, (i) {
+                      final done = _routineDone[i];
+                      final isToday = i == today;
+                      return Column(
                         children: [
-                          Container(
-                            width: sy(48),
-                            height: sy(48),
-                            decoration: const BoxDecoration(
-                              color: _lavenderDeep,
-                              shape: BoxShape.circle,
-                            ),
-                            child: Icon(
-                              Icons.sports_esports_outlined,
-                              color: _ink,
-                              size: sy(26),
+                          Text(
+                            _weekdays(l10n)[i],
+                            style: TextStyle(
+                              color: _ink.withValues(alpha: isToday ? 1 : 0.45),
+                              fontSize: sy(22),
+                              fontWeight: isToday
+                                  ? FontWeight.w800
+                                  : FontWeight.w500,
                             ),
                           ),
-                          SizedBox(width: sx(24)),
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  name,
-                                  style: TextStyle(
-                                    color: _ink,
-                                    fontSize: sy(26),
-                                    fontWeight: FontWeight.w700,
-                                  ),
-                                ),
-                                Text(
-                                  detail,
-                                  style: TextStyle(
-                                    color: _ink.withValues(alpha: 0.55),
-                                    fontSize: sy(20),
-                                    fontWeight: FontWeight.w500,
-                                  ),
-                                ),
-                              ],
+                          SizedBox(height: sy(12)),
+                          Container(
+                            width: sy(64),
+                            height: sy(64),
+                            decoration: BoxDecoration(
+                              color: done ? _ink : Colors.white,
+                              shape: BoxShape.circle,
+                              border: Border.all(
+                                color: isToday
+                                    ? _ink
+                                    : _ink.withValues(alpha: 0.15),
+                                width: isToday ? 2.2 : 1.3,
+                              ),
                             ),
+                            child: done
+                                ? Icon(
+                                    Icons.check,
+                                    color: Colors.white,
+                                    size: sy(32),
+                                  )
+                                : null,
                           ),
                         ],
-                      ),
-                    ),
-                ],
-              ),
+                      );
+                    }),
+                  ),
+                ),
+                SizedBox(height: sy(28)),
+
+                // Today's prescription.
+                _card(
+                  sx,
+                  sy,
+                  title: l10n.todaysRoutine,
+                  child: Column(
+                    children: [
+                      for (final (name, detail) in _prescription(l10n))
+                        Padding(
+                          padding: EdgeInsets.symmetric(vertical: sy(10)),
+                          child: Row(
+                            children: [
+                              Container(
+                                width: sy(48),
+                                height: sy(48),
+                                decoration: const BoxDecoration(
+                                  color: _lavenderDeep,
+                                  shape: BoxShape.circle,
+                                ),
+                                child: Icon(
+                                  Icons.sports_esports_outlined,
+                                  color: _ink,
+                                  size: sy(26),
+                                ),
+                              ),
+                              SizedBox(width: sx(24)),
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      name,
+                                      style: TextStyle(
+                                        color: _ink,
+                                        fontSize: sy(26),
+                                        fontWeight: FontWeight.w700,
+                                      ),
+                                    ),
+                                    Text(
+                                      detail,
+                                      style: TextStyle(
+                                        color: _ink.withValues(alpha: 0.55),
+                                        fontSize: sy(20),
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                    ],
+                  ),
+                ),
+              ],
             ),
           ),
 
@@ -310,9 +322,9 @@ class PatientProfileScreen extends StatelessWidget {
             right: sx(96),
             child: Center(
               child: GestureDetector(
-                onTap: () => Navigator.of(context).pushReplacement(
-                  MaterialPageRoute(builder: (_) => const HomeScreen()),
-                ),
+                onTap: () => Navigator.of(
+                  context,
+                ).push(MaterialPageRoute(builder: (_) => const HomeScreen())),
                 child: Container(
                   padding: EdgeInsets.symmetric(
                     horizontal: sx(96),

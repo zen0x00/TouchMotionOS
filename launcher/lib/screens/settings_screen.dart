@@ -5,6 +5,8 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 
 import '../l10n/app_localizations.dart';
+import '../languages.dart';
+import '../session.dart';
 import '../widgets/onscreen_keyboard.dart';
 
 /// Settings screen matching the home screen aesthetic: white canvas, ink
@@ -341,18 +343,85 @@ class _SettingsScreenState extends State<SettingsScreen> {
             SizedBox(height: sy(32)),
             Container(height: 1.3, color: Colors.black.withValues(alpha: 0.15)),
             SizedBox(height: sy(40)),
-            Text(
-              l10n.network,
-              style: TextStyle(
-                color: _ink,
-                fontSize: sy(44),
-                fontWeight: FontWeight.w800,
-                letterSpacing: -0.5,
-              ),
-            ),
+            _sectionTitle(l10n.language, sy),
+            SizedBox(height: sy(24)),
+            _languagePicker(sx, sy),
+            SizedBox(height: sy(40)),
+            _sectionTitle(l10n.network, sy),
             SizedBox(height: sy(28)),
             Expanded(child: _networkBody(sx, sy)),
           ],
+        ),
+      ),
+    );
+  }
+
+  Widget _sectionTitle(String text, double Function(double) sy) {
+    return Text(
+      text,
+      style: TextStyle(
+        color: _ink,
+        fontSize: sy(44),
+        fontWeight: FontWeight.w800,
+        letterSpacing: -0.5,
+      ),
+    );
+  }
+
+  Widget _languagePicker(
+    double Function(double) sx,
+    double Function(double) sy,
+  ) {
+    final current = Session.locale.value.languageCode;
+    return Wrap(
+      spacing: sx(20),
+      runSpacing: sy(16),
+      children: [
+        for (final lang in appLanguages)
+          _languagePill(lang, lang.code == current, sx, sy),
+      ],
+    );
+  }
+
+  Widget _languagePill(
+    AppLanguage lang,
+    bool selected,
+    double Function(double) sx,
+    double Function(double) sy,
+  ) {
+    return Material(
+      color: selected ? _ink : _lavender,
+      clipBehavior: Clip.antiAlias,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(sy(40)),
+        side: BorderSide(
+          color: selected ? _ink : _ink.withValues(alpha: 0.12),
+          width: 1.3,
+        ),
+      ),
+      child: InkWell(
+        // MaterialApp listens to Session.locale, so the whole app —
+        // including this screen — re-renders in the new language.
+        onTap: () => Session.locale.value = Locale(lang.code),
+        child: Padding(
+          padding: EdgeInsets.symmetric(horizontal: sx(36), vertical: sy(16)),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              if (selected) ...[
+                Icon(Icons.check_rounded, size: sy(26), color: Colors.white),
+                SizedBox(width: sx(12)),
+              ],
+              Text(
+                lang.native,
+                style: TextStyle(
+                  color: selected ? Colors.white : _ink,
+                  fontSize: sy(24),
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

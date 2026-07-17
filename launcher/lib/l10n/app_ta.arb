@@ -60,6 +60,7 @@
   "appointmentRequested": "சந்திப்பு கோரப்பட்டது",
   "physioNotified": "{action} — உங்கள் பிசியோவுக்குத் தெரிவிக்கப்படும்",
 
+  "language": "மொழி",
   "network": "நெட்வொர்க்",
   "online": "ஆன்லைன்",
   "offline": "ஆஃப்லைன்",

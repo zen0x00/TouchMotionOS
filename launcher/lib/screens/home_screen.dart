@@ -42,23 +42,58 @@ class _HomeScreenState extends State<HomeScreen> {
   static const _lavender = Color(0xFFF2E7FA);
   static const _lavenderDeep = Color(0xFFE3CDF6);
 
+  /// Screenshot in a floating rounded frame, so busy or mostly-white game
+  /// captures read as intentional art on the card's gradient backdrop.
+  static Widget _framedShot(
+    String asset,
+    double Function(double) sx,
+    double Function(double) sy,
+  ) {
+    return Padding(
+      padding: EdgeInsets.fromLTRB(sx(44), sy(44), sx(44), sy(8)),
+      child: Container(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(sy(20)),
+          boxShadow: [
+            BoxShadow(
+              color: _ink.withValues(alpha: 0.18),
+              blurRadius: 28,
+              offset: const Offset(0, 12),
+            ),
+          ],
+        ),
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(sy(20)),
+          child: Image.asset(
+            asset,
+            fit: BoxFit.cover,
+            width: double.infinity,
+            height: double.infinity,
+          ),
+        ),
+      ),
+    );
+  }
+
   static final _games = <_Game>[
     _Game(
       id: 'tomoro-skyhopper',
       title: 'Sky Hopper',
       tagline: (l10n) => l10n.taglineSkyHopper,
       accent: _lavender,
-      artBuilder: (sx, sy) =>
-          Image.asset('assets/slide15/slide15.png', fit: BoxFit.cover),
+      artBuilder: (sx, sy) => _framedShot('assets/slide15/slide15.png', sx, sy),
     ),
     _Game(
       id: 'tomoro-catnap',
       title: 'Cat Nap Chase',
       tagline: (l10n) => l10n.taglineCatNap,
       accent: _lavenderDeep,
-      artBuilder: (sx, sy) => Padding(
-        padding: EdgeInsets.symmetric(horizontal: sx(60), vertical: sy(40)),
-        child: SvgPicture.asset('assets/slide1/Cat.svg', fit: BoxFit.contain),
+      artBuilder: (sx, sy) => Center(
+        child: SvgPicture.asset(
+          'assets/slide1/Cat.svg',
+          width: sx(300),
+          fit: BoxFit.contain,
+        ),
       ),
     ),
     _Game(
@@ -67,7 +102,7 @@ class _HomeScreenState extends State<HomeScreen> {
       tagline: (l10n) => l10n.taglineDashlands,
       accent: _lavender,
       artBuilder: (sx, sy) =>
-          Image.asset('assets/dashlands/dashlands.png', fit: BoxFit.cover),
+          _framedShot('assets/dashlands/dashlands.png', sx, sy),
     ),
   ];
 
@@ -148,30 +183,6 @@ class _HomeScreenState extends State<HomeScreen> {
         child: Stack(
           clipBehavior: Clip.hardEdge,
           children: [
-            // Decorative shelf, top-right — mirrors slide1 scenery.
-            Positioned(
-              top: sy(90),
-              left: sx(1620),
-              child: SvgPicture.asset(
-                'assets/slide1/Shelf.svg',
-                width: sx(130),
-                height: sy(107),
-                fit: BoxFit.contain,
-              ),
-            ),
-
-            // Decorative plant, bottom-right.
-            Positioned(
-              top: sy(860),
-              left: sx(1770),
-              child: SvgPicture.asset(
-                'assets/slide1/Plant.svg',
-                width: sx(88),
-                height: sy(183),
-                fit: BoxFit.contain,
-              ),
-            ),
-
             // Header: greeting + clock + power.
             Positioned(
               top: sy(64),
@@ -180,6 +191,20 @@ class _HomeScreenState extends State<HomeScreen> {
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  if (Navigator.of(context).canPop()) ...[
+                    Padding(
+                      padding: EdgeInsets.only(top: sy(20)),
+                      child: IconButton(
+                        icon: Icon(
+                          Icons.chevron_left,
+                          size: sy(44),
+                          color: _ink,
+                        ),
+                        onPressed: () => Navigator.of(context).pop(),
+                      ),
+                    ),
+                    SizedBox(width: sx(8)),
+                  ],
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -381,18 +406,29 @@ class _HomeScreenState extends State<HomeScreen> {
           ],
         ),
         child: Material(
-          color: game.accent,
+          color: Colors.white,
           clipBehavior: Clip.antiAlias,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(sy(28)),
-            side: BorderSide(color: _ink.withValues(alpha: 0.12), width: 1.3),
+            side: BorderSide(color: _ink.withValues(alpha: 0.1), width: 1.3),
           ),
           child: InkWell(
             onTap: () => _launchGame(game),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                Expanded(child: game.artBuilder(sx, sy)),
+                Expanded(
+                  child: DecoratedBox(
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                        colors: [game.accent, _lavenderDeep],
+                      ),
+                    ),
+                    child: game.artBuilder(sx, sy),
+                  ),
+                ),
                 Container(
                   color: Colors.white,
                   padding: EdgeInsets.symmetric(
@@ -417,12 +453,13 @@ class _HomeScreenState extends State<HomeScreen> {
                             SizedBox(height: sy(6)),
                             Text(
                               game.tagline(l10n),
-                              maxLines: 1,
+                              maxLines: 2,
                               overflow: TextOverflow.ellipsis,
                               style: TextStyle(
                                 color: _ink.withValues(alpha: 0.55),
-                                fontSize: sy(20),
+                                fontSize: sy(19),
                                 fontWeight: FontWeight.w500,
+                                height: 1.25,
                               ),
                             ),
                           ],

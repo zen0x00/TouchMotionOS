@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import '../onboarding_state.dart';
-import 'home_screen.dart';
+import 'organisation_screen.dart';
 
 class Slide16Screen extends StatelessWidget {
   const Slide16Screen({super.key});
@@ -41,8 +41,10 @@ class Slide16Screen extends StatelessWidget {
             child: GestureDetector(
               onTap: () {
                 OnboardingState.markDone();
+                // Same entry point the app boots into once onboarding is
+                // done: organisation login, then language, profile, home.
                 Navigator.of(context).pushReplacement(
-                  MaterialPageRoute(builder: (_) => const HomeScreen()),
+                  MaterialPageRoute(builder: (_) => const OrganisationScreen()),
                 );
               },
               child: SvgPicture.asset(

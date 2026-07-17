@@ -182,6 +182,9 @@ class AppLocalizationsHi extends AppLocalizations {
   }
 
   @override
+  String get language => 'भाषा';
+
+  @override
   String get network => 'नेटवर्क';
 
   @override

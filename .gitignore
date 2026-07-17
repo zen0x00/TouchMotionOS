@@ -5,7 +5,7 @@
 # nix
 result
 result-*
-iso-result
+*-result
 /nixos.qcow2
 /serial.log
 
@@ -26,4 +26,3 @@ launcher/*.iml
 .direnv/
 *.qcow2
 games/dashlands/game/
-installer-result

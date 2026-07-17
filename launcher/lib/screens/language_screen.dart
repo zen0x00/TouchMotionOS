@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../l10n/app_localizations.dart';
+import '../languages.dart';
 import '../session.dart';
 import '../widgets/power_button.dart';
 import 'patient_profile_screen.dart';
@@ -14,27 +15,10 @@ class LanguageScreen extends StatefulWidget {
   State<LanguageScreen> createState() => _LanguageScreenState();
 }
 
-class _Language {
-  const _Language(this.code, this.name, this.native);
-
-  final String code;
-  final String name;
-  final String native;
-}
-
 class _LanguageScreenState extends State<LanguageScreen> {
   static const _ink = Color(0xFF1C1C1E);
   static const _lavender = Color(0xFFF2E7FA);
   static const _lavenderDeep = Color(0xFFE3CDF6);
-
-  static const _languages = <_Language>[
-    _Language('en', 'English', 'English'),
-    _Language('te', 'Telugu', 'తెలుగు'),
-    _Language('hi', 'Hindi', 'हिन्दी'),
-    _Language('ta', 'Tamil', 'தமிழ்'),
-    _Language('ml', 'Malayalam', 'മലയാളം'),
-    _Language('kn', 'Kannada', 'ಕನ್ನಡ'),
-  ];
 
   String get _selected => Session.locale.value.languageCode;
 
@@ -52,6 +36,15 @@ class _LanguageScreenState extends State<LanguageScreen> {
       body: Stack(
         children: [
           Positioned(top: 16, right: 16, child: const PowerButton()),
+          if (Navigator.of(context).canPop())
+            Positioned(
+              top: sy(56),
+              left: sx(72),
+              child: IconButton(
+                icon: Icon(Icons.chevron_left, size: sy(44), color: _ink),
+                onPressed: () => Navigator.of(context).pop(),
+              ),
+            ),
           Center(
             child: ConstrainedBox(
               constraints: BoxConstraints(maxWidth: sx(1100)),
@@ -82,7 +75,7 @@ class _LanguageScreenState extends State<LanguageScreen> {
                     spacing: sx(32),
                     runSpacing: sy(32),
                     children: [
-                      for (final lang in _languages)
+                      for (final lang in appLanguages)
                         GestureDetector(
                           onTap: () => setState(
                             () => Session.locale.value = Locale(lang.code),
@@ -130,7 +123,7 @@ class _LanguageScreenState extends State<LanguageScreen> {
                   ),
                   SizedBox(height: sy(72)),
                   GestureDetector(
-                    onTap: () => Navigator.of(context).pushReplacement(
+                    onTap: () => Navigator.of(context).push(
                       MaterialPageRoute(
                         builder: (_) => const PatientProfileScreen(),
                       ),

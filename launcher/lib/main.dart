@@ -25,6 +25,50 @@ void main() {
   runApp(const MyApp());
 }
 
+/// Fade + gentle horizontal slide for every route push/pop. The incoming
+/// page drifts in from the right while the outgoing one recedes slightly,
+/// so forward and back both read as one fluid motion on the kiosk.
+class _FadeSlideTransitionsBuilder extends PageTransitionsBuilder {
+  const _FadeSlideTransitionsBuilder();
+
+  @override
+  Widget buildTransitions<T>(
+    PageRoute<T> route,
+    BuildContext context,
+    Animation<double> animation,
+    Animation<double> secondaryAnimation,
+    Widget child,
+  ) {
+    final curved = CurvedAnimation(
+      parent: animation,
+      curve: Curves.easeOutCubic,
+      reverseCurve: Curves.easeInCubic,
+    );
+    final secondaryCurved = CurvedAnimation(
+      parent: secondaryAnimation,
+      curve: Curves.easeOutCubic,
+      reverseCurve: Curves.easeInCubic,
+    );
+    return SlideTransition(
+      // Recede left as the next page covers this one.
+      position: Tween<Offset>(
+        begin: Offset.zero,
+        end: const Offset(-0.06, 0),
+      ).animate(secondaryCurved),
+      child: FadeTransition(
+        opacity: curved,
+        child: SlideTransition(
+          position: Tween<Offset>(
+            begin: const Offset(0.06, 0),
+            end: Offset.zero,
+          ).animate(curved),
+          child: child,
+        ),
+      ),
+    );
+  }
+}
+
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
@@ -45,6 +89,12 @@ class MyApp extends StatelessWidget {
       textTheme: base.textTheme.apply(fontFamilyFallback: _fontFallback),
       primaryTextTheme: base.primaryTextTheme.apply(
         fontFamilyFallback: _fontFallback,
+      ),
+      pageTransitionsTheme: const PageTransitionsTheme(
+        builders: {
+          TargetPlatform.linux: _FadeSlideTransitionsBuilder(),
+          TargetPlatform.android: _FadeSlideTransitionsBuilder(),
+        },
       ),
     );
   }

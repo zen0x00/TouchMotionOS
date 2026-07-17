@@ -60,6 +60,7 @@
   "appointmentRequested": "ಅಪಾಯಿಂಟ್‌ಮೆಂಟ್ ಕೋರಲಾಗಿದೆ",
   "physioNotified": "{action} — ನಿಮ್ಮ ಫಿಸಿಯೋಗೆ ತಿಳಿಸಲಾಗುವುದು",
 
+  "language": "ಭಾಷೆ",
   "network": "ನೆಟ್‌ವರ್ಕ್",
   "online": "ಆನ್‌ಲೈನ್",
   "offline": "ಆಫ್‌ಲೈನ್",

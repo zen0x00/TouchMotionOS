@@ -60,6 +60,7 @@
   "appointmentRequested": "अपॉइंटमेंट का अनुरोध भेजा गया",
   "physioNotified": "{action} — आपके फ़िज़ियो को सूचित किया जाएगा",
 
+  "language": "भाषा",
   "network": "नेटवर्क",
   "online": "ऑनलाइन",
   "offline": "ऑफ़लाइन",

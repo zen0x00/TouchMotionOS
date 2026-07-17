@@ -430,6 +430,12 @@ abstract class AppLocalizations {
   /// **'{action} — your physio will be notified'**
   String physioNotified(String action);
 
+  /// No description provided for @language.
+  ///
+  /// In en, this message translates to:
+  /// **'Language'**
+  String get language;
+
   /// No description provided for @network.
   ///
   /// In en, this message translates to:

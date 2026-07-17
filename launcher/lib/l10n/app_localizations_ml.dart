@@ -184,6 +184,9 @@ class AppLocalizationsMl extends AppLocalizations {
   }
 
   @override
+  String get language => 'ഭാഷ';
+
+  @override
   String get network => 'നെറ്റ്‌വർക്ക്';
 
   @override

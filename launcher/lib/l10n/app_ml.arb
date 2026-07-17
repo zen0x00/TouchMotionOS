@@ -60,6 +60,7 @@
   "appointmentRequested": "അപ്പോയിന്റ്മെന്റ് അഭ്യർത്ഥിച്ചു",
   "physioNotified": "{action} — നിങ്ങളുടെ ഫിസിയോയെ അറിയിക്കും",
 
+  "language": "ഭാഷ",
   "network": "നെറ്റ്‌വർക്ക്",
   "online": "ഓൺലൈൻ",
   "offline": "ഓഫ്‌ലൈൻ",
