@@ -25,3 +25,5 @@ launcher/*.iml
 .vscode/
 .direnv/
 *.qcow2
+games/dashlands/game/
+installer-result

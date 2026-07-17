@@ -25,4 +25,12 @@
   };
 
   networking.hostName = "tomoro-live";
+
+  # Skip onboarding on live ISO — marker file would be lost on every reboot
+  # anyway (squashfs root), so pre-seed it into the image via activation.
+  system.activationScripts.tomoroSkipOnboarding = ''
+    install -d -m 755 -o tomoro -g users /home/tomoro/.local/share/tomoro
+    touch /home/tomoro/.local/share/tomoro/onboarding_done
+    chown tomoro:users /home/tomoro/.local/share/tomoro/onboarding_done
+  '';
 }

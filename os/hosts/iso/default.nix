@@ -86,7 +86,7 @@ in
   # Ship the appliance closure inside the ISO so nixos-install works offline.
   isoImage.storeContents = [ applianceSystem ];
 
-  isoImage.isoName = lib.mkForce "tomoro-installer.iso";
+  image.baseName = lib.mkForce "touchmotionOS";
   # zstd builds much faster than the default xz at a small size cost.
   isoImage.squashfsCompression = "zstd -Xcompression-level 6";
 

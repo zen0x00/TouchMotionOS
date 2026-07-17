@@ -25,6 +25,8 @@
 
         packages = {
           launcher = pkgs.callPackage ./launcher { };
+          platform = pkgs.callPackage ./platform { };
+          dashlands = pkgs.callPackage ./games/dashlands { };
         };
       }
     ) // {

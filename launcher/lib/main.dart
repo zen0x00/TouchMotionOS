@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'onboarding_state.dart';
 import 'widgets/power_button.dart';
-import 'screens/home_screen.dart';
+import 'screens/organisation_screen.dart';
 import 'screens/slide1.dart';
 import 'screens/slide2.dart';
 import 'screens/slide3.dart';
@@ -31,7 +31,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: OnboardingState.isDone
-          ? const HomeScreen()
+          ? const OrganisationScreen()
           : const OnboardingScreen(),
     );
   }
