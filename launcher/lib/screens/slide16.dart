@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import '../onboarding_state.dart';
 import 'home_screen.dart';
+
 class Slide16Screen extends StatelessWidget {
   const Slide16Screen({super.key});
 
@@ -21,7 +22,6 @@ class Slide16Screen extends StatelessWidget {
       child: Stack(
         clipBehavior: Clip.hardEdge,
         children: [
-
           //Headline
           Positioned(
             top: sy(342),
@@ -53,7 +53,6 @@ class Slide16Screen extends StatelessWidget {
               ),
             ),
           ),
-
         ],
       ),
     );

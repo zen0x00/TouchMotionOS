@@ -20,7 +20,6 @@ class Slide6Screen extends StatelessWidget {
       child: Stack(
         clipBehavior: Clip.hardEdge,
         children: [
-
           //Frame6
           Positioned(
             top: sy(460.8),
@@ -67,7 +66,6 @@ class Slide6Screen extends StatelessWidget {
               color: Colors.black.withOpacity(0.15),
             ),
           ),
-
         ],
       ),
     );

@@ -4,6 +4,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 
+import '../l10n/app_localizations.dart';
 import '../widgets/onscreen_keyboard.dart';
 
 /// Settings screen matching the home screen aesthetic: white canvas, ink
@@ -62,10 +63,10 @@ class _WifiNetwork {
   });
 
   factory _WifiNetwork.fromJson(Map<String, dynamic> json) => _WifiNetwork(
-        ssid: json['ssid'] as String,
-        signalDbm: json['signal_dbm'] as int,
-        secured: json['secured'] as bool,
-      );
+    ssid: json['ssid'] as String,
+    signalDbm: json['signal_dbm'] as int,
+    secured: json['secured'] as bool,
+  );
 
   final String ssid;
   final int signalDbm;
@@ -105,8 +106,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
     try {
       final result = await Process.run('tomoro-net', const ['status']);
       if (result.exitCode != 0) {
-        throw ProcessException('tomoro-net', const ['status'],
-            result.stderr as String, result.exitCode);
+        throw ProcessException(
+          'tomoro-net',
+          const ['status'],
+          result.stderr as String,
+          result.exitCode,
+        );
       }
       final data = jsonDecode(result.stdout as String) as Map<String, dynamic>;
       if (!mounted) return;
@@ -119,7 +124,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
       });
     } on Exception {
       if (!mounted) return;
-      setState(() => _error = 'Network service unavailable');
+      setState(
+        () => _error = AppLocalizations.of(context)!.networkServiceUnavailable,
+      );
     }
   }
 
@@ -148,7 +155,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
       if (!mounted) return;
       setState(() {
         _scanning = false;
-        _wifiError = 'Scan failed — network service unavailable';
+        _wifiError = AppLocalizations.of(context)!.scanFailed;
       });
     }
   }
@@ -164,10 +171,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
       _wifiError = null;
     });
     try {
-      final result = await Process.run(
-        'tomoro-net',
-        ['connect', iface, net.ssid, ?psk],
-      );
+      final result = await Process.run('tomoro-net', [
+        'connect',
+        iface,
+        net.ssid,
+        ?psk,
+      ]);
       final data = jsonDecode(result.stdout as String) as Map<String, dynamic>;
       if (!mounted) return;
       setState(() {
@@ -184,7 +193,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
       if (!mounted) return;
       setState(() {
         _connectingSsid = null;
-        _wifiError = 'Connection failed — network service unavailable';
+        _wifiError = AppLocalizations.of(context)!.connectionFailed;
       });
     }
   }
@@ -209,7 +218,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Password for "$ssid"',
+                    AppLocalizations.of(context)!.passwordFor(ssid),
                     style: const TextStyle(
                       color: _ink,
                       fontSize: 26,
@@ -225,19 +234,17 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     decoration: BoxDecoration(
                       color: const Color(0xFFF4F4F6),
                       borderRadius: BorderRadius.circular(14),
-                      border: Border.all(
-                        color: _ink.withValues(alpha: 0.15),
-                      ),
+                      border: Border.all(color: _ink.withValues(alpha: 0.15)),
                     ),
                     child: Row(
                       children: [
                         Expanded(
                           child: Text(
                             value.isEmpty
-                                ? 'Enter password'
+                                ? AppLocalizations.of(context)!.enterPassword
                                 : obscure
-                                    ? '•' * value.length
-                                    : value,
+                                ? '•' * value.length
+                                : value,
                             style: TextStyle(
                               color: value.isEmpty
                                   ? _ink.withValues(alpha: 0.35)
@@ -276,7 +283,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     child: TextButton(
                       onPressed: () => Navigator.of(context).pop(),
                       child: Text(
-                        'Cancel',
+                        AppLocalizations.of(context)!.cancel,
                         style: TextStyle(
                           color: _ink.withValues(alpha: 0.55),
                           fontSize: 20,
@@ -301,6 +308,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     const figmaH = 1080.0;
     double sx(double val) => val * (screenW / figmaW);
     double sy(double val) => val * (screenH / figmaH);
+    final l10n = AppLocalizations.of(context)!;
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -318,7 +326,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 ),
                 SizedBox(width: sx(24)),
                 Text(
-                  'Settings',
+                  l10n.settings,
                   style: TextStyle(
                     color: _ink,
                     fontSize: sy(72),
@@ -334,7 +342,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
             Container(height: 1.3, color: Colors.black.withValues(alpha: 0.15)),
             SizedBox(height: sy(40)),
             Text(
-              'Network',
+              l10n.network,
               style: TextStyle(
                 color: _ink,
                 fontSize: sy(44),
@@ -364,7 +372,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
           Icon(Icons.circle, size: sy(14), color: color),
           SizedBox(width: sx(10)),
           Text(
-            _online ? 'Online' : 'Offline',
+            _online
+                ? AppLocalizations.of(context)!.online
+                : AppLocalizations.of(context)!.offline,
             style: TextStyle(
               color: color,
               fontSize: sy(22),
@@ -387,7 +397,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     if (interfaces.isEmpty) {
       return _message(
         Icons.wifi_off_rounded,
-        'No network hardware detected',
+        AppLocalizations.of(context)!.noNetworkHardware,
         sy,
       );
     }
@@ -423,13 +433,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
     double Function(double) sx,
     double Function(double) sy,
   ) {
+    final l10n = AppLocalizations.of(context)!;
     final statusText = iface.connected
-        ? 'Connected'
+        ? l10n.connected
         : iface.carrier
-            ? 'Link up, no address'
-            : iface.isWifi
-                ? 'Not connected'
-                : 'Cable unplugged';
+        ? l10n.linkUpNoAddress
+        : iface.isWifi
+        ? l10n.notConnected
+        : l10n.cableUnplugged;
     final details = <String>[
       if (iface.isWifi && iface.ssid != null) iface.ssid!,
       if (iface.ipv4.isNotEmpty) iface.ipv4.join(', '),
@@ -464,86 +475,89 @@ class _SettingsScreenState extends State<SettingsScreen> {
     double Function(double) sy,
   ) {
     return Row(
-        children: [
-          Icon(
-            iface.isWifi ? _wifiIcon(iface) : Icons.settings_ethernet_rounded,
-            size: sy(48),
-            color: iface.connected ? _ink : _ink.withValues(alpha: 0.35),
-          ),
-          SizedBox(width: sx(32)),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
+      children: [
+        Icon(
+          iface.isWifi ? _wifiIcon(iface) : Icons.settings_ethernet_rounded,
+          size: sy(48),
+          color: iface.connected ? _ink : _ink.withValues(alpha: 0.35),
+        ),
+        SizedBox(width: sx(32)),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                '${iface.isWifi ? AppLocalizations.of(context)!.wifi : AppLocalizations.of(context)!.ethernet}  ·  ${iface.name}',
+                style: TextStyle(
+                  color: _ink,
+                  fontSize: sy(30),
+                  fontWeight: FontWeight.w800,
+                  letterSpacing: -0.5,
+                ),
+              ),
+              if (details.isNotEmpty) ...[
+                SizedBox(height: sy(6)),
                 Text(
-                  '${iface.isWifi ? 'Wi-Fi' : 'Ethernet'}  ·  ${iface.name}',
+                  details.join('  ·  '),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
                   style: TextStyle(
-                    color: _ink,
-                    fontSize: sy(30),
-                    fontWeight: FontWeight.w800,
-                    letterSpacing: -0.5,
+                    color: _ink.withValues(alpha: 0.55),
+                    fontSize: sy(22),
+                    fontWeight: FontWeight.w500,
                   ),
                 ),
-                if (details.isNotEmpty) ...[
-                  SizedBox(height: sy(6)),
-                  Text(
-                    details.join('  ·  '),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: TextStyle(
-                      color: _ink.withValues(alpha: 0.55),
-                      fontSize: sy(22),
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                ],
               ],
-            ),
+            ],
           ),
+        ),
+        SizedBox(width: sx(24)),
+        Text(
+          statusText,
+          style: TextStyle(
+            color: iface.connected
+                ? const Color(0xFF2E9E5B)
+                : _ink.withValues(alpha: 0.45),
+            fontSize: sy(24),
+            fontWeight: FontWeight.w700,
+          ),
+        ),
+        if (iface.isWifi) ...[
           SizedBox(width: sx(24)),
-          Text(
-            statusText,
-            style: TextStyle(
-              color: iface.connected
-                  ? const Color(0xFF2E9E5B)
-                  : _ink.withValues(alpha: 0.45),
-              fontSize: sy(24),
-              fontWeight: FontWeight.w700,
-            ),
-          ),
-          if (iface.isWifi) ...[
-            SizedBox(width: sx(24)),
-            _scanIface == iface.name
-                ? IconButton(
-                    tooltip: 'Close',
-                    onPressed: () => setState(() {
-                      _scanIface = null;
-                      _scanResults = null;
-                      _wifiError = null;
-                    }),
-                    icon: Icon(Icons.expand_less_rounded,
-                        size: sy(36), color: _ink),
-                  )
-                : FilledButton.icon(
-                    style: FilledButton.styleFrom(
-                      backgroundColor: _ink,
-                      padding: EdgeInsets.symmetric(
-                        horizontal: sx(28),
-                        vertical: sy(14),
-                      ),
-                    ),
-                    onPressed: () => _scan(iface.name),
-                    icon: Icon(Icons.radar_rounded, size: sy(26)),
-                    label: Text(
-                      'Scan',
-                      style: TextStyle(
-                        fontSize: sy(22),
-                        fontWeight: FontWeight.w700,
-                      ),
+          _scanIface == iface.name
+              ? IconButton(
+                  tooltip: AppLocalizations.of(context)!.close,
+                  onPressed: () => setState(() {
+                    _scanIface = null;
+                    _scanResults = null;
+                    _wifiError = null;
+                  }),
+                  icon: Icon(
+                    Icons.expand_less_rounded,
+                    size: sy(36),
+                    color: _ink,
+                  ),
+                )
+              : FilledButton.icon(
+                  style: FilledButton.styleFrom(
+                    backgroundColor: _ink,
+                    padding: EdgeInsets.symmetric(
+                      horizontal: sx(28),
+                      vertical: sy(14),
                     ),
                   ),
-          ],
+                  onPressed: () => _scan(iface.name),
+                  icon: Icon(Icons.radar_rounded, size: sy(26)),
+                  label: Text(
+                    AppLocalizations.of(context)!.scan,
+                    style: TextStyle(
+                      fontSize: sy(22),
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+                ),
         ],
+      ],
     );
   }
 
@@ -586,7 +600,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   ),
                   SizedBox(width: sx(20)),
                   Text(
-                    'Scanning for networks…',
+                    AppLocalizations.of(context)!.scanning,
                     style: TextStyle(
                       color: _ink.withValues(alpha: 0.55),
                       fontSize: sy(24),
@@ -599,7 +613,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
             Padding(
               padding: EdgeInsets.symmetric(vertical: sy(12)),
               child: Text(
-                'No networks found',
+                AppLocalizations.of(context)!.noNetworksFound,
                 style: TextStyle(
                   color: _ink.withValues(alpha: 0.55),
                   fontSize: sy(24),
@@ -632,8 +646,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
               net.signalDbm >= -60
                   ? Icons.wifi_rounded
                   : net.signalDbm >= -75
-                      ? Icons.wifi_2_bar_rounded
-                      : Icons.wifi_1_bar_rounded,
+                  ? Icons.wifi_2_bar_rounded
+                  : Icons.wifi_1_bar_rounded,
               size: sy(32),
               color: _ink.withValues(alpha: 0.7),
             ),
@@ -668,7 +682,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
               )
             else if (isCurrent)
               Text(
-                'Connected',
+                AppLocalizations.of(context)!.connected,
                 style: TextStyle(
                   color: const Color(0xFF2E9E5B),
                   fontSize: sy(22),

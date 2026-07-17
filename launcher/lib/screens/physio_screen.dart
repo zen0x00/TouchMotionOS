@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../l10n/app_localizations.dart';
 import '../widgets/power_button.dart';
 
 /// Contact-my-physio screen: consult a physio or book an appointment.
@@ -18,7 +19,7 @@ class PhysioScreen extends StatelessWidget {
       SnackBar(
         behavior: SnackBarBehavior.floating,
         backgroundColor: _ink,
-        content: Text('$action — your physio will be notified'),
+        content: Text(AppLocalizations.of(context)!.physioNotified(action)),
       ),
     );
   }
@@ -29,6 +30,7 @@ class PhysioScreen extends StatelessWidget {
     final screenH = MediaQuery.of(context).size.height;
     double sx(double val) => val * (screenW / 1920.0);
     double sy(double val) => val * (screenH / 1080.0);
+    final l10n = AppLocalizations.of(context)!;
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -56,7 +58,7 @@ class PhysioScreen extends StatelessWidget {
                   ),
                   SizedBox(height: sy(32)),
                   Text(
-                    'Contact my physio',
+                    l10n.contactPhysio,
                     style: TextStyle(
                       color: _ink,
                       fontSize: sy(56),
@@ -67,7 +69,7 @@ class PhysioScreen extends StatelessWidget {
                   SizedBox(height: sy(12)),
                   Text(
                     // TODO(backend): show the assigned physio's name.
-                    'Dr. Priya Sharma — your assigned physiotherapist',
+                    l10n.physioAssigned,
                     style: TextStyle(
                       color: _ink.withValues(alpha: 0.55),
                       fontSize: sy(24),
@@ -83,9 +85,9 @@ class PhysioScreen extends StatelessWidget {
                         sx,
                         sy,
                         icon: Icons.videocam_outlined,
-                        title: 'Consult now',
-                        subtitle: 'Ask a question or report how you feel',
-                        onTap: () => _notYet(context, 'Consult requested'),
+                        title: l10n.consultNow,
+                        subtitle: l10n.consultNowSub,
+                        onTap: () => _notYet(context, l10n.consultRequested),
                       ),
                       SizedBox(width: sx(40)),
                       _actionCard(
@@ -93,9 +95,10 @@ class PhysioScreen extends StatelessWidget {
                         sx,
                         sy,
                         icon: Icons.calendar_month_outlined,
-                        title: 'Book appointment',
-                        subtitle: 'Pick a time that suits you',
-                        onTap: () => _notYet(context, 'Appointment requested'),
+                        title: l10n.bookAppointment,
+                        subtitle: l10n.bookAppointmentSub,
+                        onTap: () =>
+                            _notYet(context, l10n.appointmentRequested),
                       ),
                     ],
                   ),

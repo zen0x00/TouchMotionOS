@@ -20,7 +20,6 @@ class Slide14Screen extends StatelessWidget {
       child: Stack(
         clipBehavior: Clip.hardEdge,
         children: [
-
           //System14
           Positioned(
             top: sy(110),
@@ -45,7 +44,6 @@ class Slide14Screen extends StatelessWidget {
               fit: BoxFit.contain,
             ),
           ),
-
         ],
       ),
     );

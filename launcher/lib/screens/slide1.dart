@@ -6,13 +6,11 @@ class Slide1Screen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     final screenW = MediaQuery.of(context).size.width;
     final screenH = MediaQuery.of(context).size.height;
 
     const figmaW = 1920.0;
     const figmaH = 1080.0;
-
 
     final scaleX = screenW / figmaW;
     final scaleY = screenH / figmaH;
@@ -26,7 +24,6 @@ class Slide1Screen extends StatelessWidget {
       height: screenH,
       child: Stack(
         children: [
-
           //Window
           Positioned(
             top: sy(332),
@@ -145,7 +142,6 @@ class Slide1Screen extends StatelessWidget {
               fit: BoxFit.contain,
             ),
           ),
-
         ],
       ),
     );

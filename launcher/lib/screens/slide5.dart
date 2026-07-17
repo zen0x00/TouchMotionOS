@@ -20,8 +20,6 @@ class Slide5Screen extends StatelessWidget {
       child: Stack(
         clipBehavior: Clip.hardEdge,
         children: [
-
-
           //TV5
           Positioned(
             top: sy(146),
@@ -69,7 +67,6 @@ class Slide5Screen extends StatelessWidget {
               fit: BoxFit.contain,
             ),
           ),
-
         ],
       ),
     );

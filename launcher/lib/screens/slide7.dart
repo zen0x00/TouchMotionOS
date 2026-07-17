@@ -20,7 +20,6 @@ class Slide7Screen extends StatelessWidget {
       child: Stack(
         clipBehavior: Clip.hardEdge,
         children: [
-
           //Clock7
           Positioned(
             top: sy(74.86),
@@ -68,7 +67,6 @@ class Slide7Screen extends StatelessWidget {
               fit: BoxFit.contain,
             ),
           ),
-
         ],
       ),
     );

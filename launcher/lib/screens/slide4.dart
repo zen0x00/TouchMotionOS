@@ -20,7 +20,6 @@ class Slide4Screen extends StatelessWidget {
       child: Stack(
         clipBehavior: Clip.hardEdge,
         children: [
-
           //Lamp4
           Positioned(
             top: sy(-21),

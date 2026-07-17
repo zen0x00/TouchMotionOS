@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
+import '../l10n/app_localizations.dart';
 import '../widgets/power_button.dart';
 import 'physio_screen.dart';
 import 'settings_screen.dart';
@@ -30,7 +31,7 @@ class _Game {
   /// Binary name looked up on PATH when the card is tapped.
   final String id;
   final String title;
-  final String tagline;
+  final String Function(AppLocalizations) tagline;
   final Color accent;
   final Widget Function(double Function(double) sx, double Function(double) sy)
   artBuilder;
@@ -45,7 +46,7 @@ class _HomeScreenState extends State<HomeScreen> {
     _Game(
       id: 'tomoro-skyhopper',
       title: 'Sky Hopper',
-      tagline: 'Flap through the city — one hop at a time',
+      tagline: (l10n) => l10n.taglineSkyHopper,
       accent: _lavender,
       artBuilder: (sx, sy) =>
           Image.asset('assets/slide15/slide15.png', fit: BoxFit.cover),
@@ -53,7 +54,7 @@ class _HomeScreenState extends State<HomeScreen> {
     _Game(
       id: 'tomoro-catnap',
       title: 'Cat Nap Chase',
-      tagline: 'Keep the cat awake with your best moves',
+      tagline: (l10n) => l10n.taglineCatNap,
       accent: _lavenderDeep,
       artBuilder: (sx, sy) => Padding(
         padding: EdgeInsets.symmetric(horizontal: sx(60), vertical: sy(40)),
@@ -63,7 +64,7 @@ class _HomeScreenState extends State<HomeScreen> {
     _Game(
       id: 'tomoro-dashlands',
       title: 'Dashlands',
-      tagline: 'Dash, jump, and race across the lands',
+      tagline: (l10n) => l10n.taglineDashlands,
       accent: _lavender,
       artBuilder: (sx, sy) =>
           Image.asset('assets/dashlands/dashlands.png', fit: BoxFit.cover),
@@ -95,10 +96,10 @@ class _HomeScreenState extends State<HomeScreen> {
     return '$h:$m $ampm';
   }
 
-  String get _greeting {
-    if (_now.hour < 12) return 'Good morning!';
-    if (_now.hour < 17) return 'Good afternoon!';
-    return 'Good evening!';
+  String _greeting(AppLocalizations l10n) {
+    if (_now.hour < 12) return l10n.goodMorning;
+    if (_now.hour < 17) return l10n.goodAfternoon;
+    return l10n.goodEvening;
   }
 
   Future<void> _launchGame(_Game game) async {
@@ -112,7 +113,15 @@ class _HomeScreenState extends State<HomeScreen> {
           SnackBar(
             behavior: SnackBarBehavior.floating,
             backgroundColor: _ink,
-            content: Text('${game.title} is not installed yet'),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(16),
+            ),
+            width: 480,
+            content: Text(
+              AppLocalizations.of(context)!.notInstalled(game.title),
+              textAlign: TextAlign.center,
+              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+            ),
           ),
         );
       }
@@ -129,6 +138,7 @@ class _HomeScreenState extends State<HomeScreen> {
     const figmaH = 1080.0;
     double sx(double val) => val * (screenW / figmaW);
     double sy(double val) => val * (screenH / figmaH);
+    final l10n = AppLocalizations.of(context)!;
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -175,7 +185,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          _greeting,
+                          _greeting(l10n),
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                           style: TextStyle(
@@ -188,7 +198,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
                         SizedBox(height: sy(12)),
                         Text(
-                          'Pick a game and get moving',
+                          l10n.pickAGame,
                           style: TextStyle(
                             color: _ink.withValues(alpha: 0.55),
                             fontSize: sy(26),
@@ -198,42 +208,47 @@ class _HomeScreenState extends State<HomeScreen> {
                       ],
                     ),
                   ),
-                  Text(
-                    _clock,
-                    style: TextStyle(
-                      color: _ink,
-                      fontSize: sy(30),
-                      fontWeight: FontWeight.w600,
+                  // Clock and controls sit on the greeting's first line.
+                  Padding(
+                    padding: EdgeInsets.only(top: sy(14)),
+                    child: Row(
+                      children: [
+                        Text(
+                          _clock,
+                          style: TextStyle(
+                            color: _ink,
+                            fontSize: sy(30),
+                            fontWeight: FontWeight.w600,
+                            letterSpacing: -0.3,
+                          ),
+                        ),
+                        SizedBox(width: sx(36)),
+                        _headerButton(
+                          tooltip: l10n.contactPhysio,
+                          icon: Icons.support_agent_rounded,
+                          size: sy(56),
+                          onTap: () => Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (_) => const PhysioScreen(),
+                            ),
+                          ),
+                        ),
+                        SizedBox(width: sx(16)),
+                        _headerButton(
+                          tooltip: l10n.settings,
+                          icon: Icons.settings_outlined,
+                          size: sy(56),
+                          onTap: () => Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (_) => const SettingsScreen(),
+                            ),
+                          ),
+                        ),
+                        SizedBox(width: sx(16)),
+                        PowerButton(size: sy(56)),
+                      ],
                     ),
                   ),
-                  SizedBox(width: sx(24)),
-                  IconButton(
-                    tooltip: 'Contact my physio',
-                    onPressed: () => Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (_) => const PhysioScreen(),
-                      ),
-                    ),
-                    icon: Icon(
-                      Icons.support_agent,
-                      color: Colors.black.withValues(alpha: 0.7),
-                    ),
-                  ),
-                  SizedBox(width: sx(8)),
-                  IconButton(
-                    tooltip: 'Settings',
-                    onPressed: () => Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (_) => const SettingsScreen(),
-                      ),
-                    ),
-                    icon: Icon(
-                      Icons.settings_outlined,
-                      color: Colors.black.withValues(alpha: 0.7),
-                    ),
-                  ),
-                  SizedBox(width: sx(8)),
-                  const PowerButton(),
                 ],
               ),
             ),
@@ -254,7 +269,7 @@ class _HomeScreenState extends State<HomeScreen> {
               top: sy(300),
               left: sx(96),
               child: Text(
-                'Library',
+                l10n.library,
                 style: TextStyle(
                   color: _ink,
                   fontSize: sy(44),
@@ -272,7 +287,7 @@ class _HomeScreenState extends State<HomeScreen> {
               child: Row(
                 children: [
                   for (final game in _games) ...[
-                    Expanded(child: _gameCard(game, sx, sy)),
+                    Expanded(child: _gameCard(game, l10n, sx, sy)),
                     if (game != _games.last) SizedBox(width: sx(48)),
                   ],
                 ],
@@ -292,7 +307,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                   SizedBox(width: sx(12)),
                   Text(
-                    'Tap a card to play',
+                    l10n.tapCardToPlay,
                     style: TextStyle(
                       color: _ink.withValues(alpha: 0.35),
                       fontSize: sy(20),
@@ -308,90 +323,139 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
+  Widget _headerButton({
+    required String tooltip,
+    required IconData icon,
+    required double size,
+    required VoidCallback onTap,
+  }) {
+    return Tooltip(
+      message: tooltip,
+      child: Material(
+        color: Colors.transparent,
+        shape: const CircleBorder(),
+        clipBehavior: Clip.antiAlias,
+        child: InkWell(
+          onTap: onTap,
+          child: Container(
+            width: size,
+            height: size,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              border: Border.all(
+                color: _ink.withValues(alpha: 0.15),
+                width: 1.3,
+              ),
+            ),
+            child: Icon(
+              icon,
+              size: size * 0.5,
+              color: _ink.withValues(alpha: 0.7),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
   Widget _gameCard(
     _Game game,
+    AppLocalizations l10n,
     double Function(double) sx,
     double Function(double) sy,
   ) {
     final launching = _launching == game.id;
-    return GestureDetector(
-      onTap: () => _launchGame(game),
-      child: AnimatedScale(
-        scale: launching ? 0.97 : 1.0,
-        duration: const Duration(milliseconds: 150),
-        child: Container(
-          decoration: BoxDecoration(
-            color: game.accent,
-            borderRadius: BorderRadius.circular(sy(28)),
-            border: Border.all(color: _ink.withValues(alpha: 0.12), width: 1.3),
-          ),
+    return AnimatedScale(
+      scale: launching ? 0.97 : 1.0,
+      duration: const Duration(milliseconds: 150),
+      curve: Curves.easeOut,
+      child: Container(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(sy(28)),
+          boxShadow: [
+            BoxShadow(
+              color: _ink.withValues(alpha: 0.08),
+              blurRadius: 24,
+              offset: const Offset(0, 10),
+            ),
+          ],
+        ),
+        child: Material(
+          color: game.accent,
           clipBehavior: Clip.antiAlias,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              Expanded(child: game.artBuilder(sx, sy)),
-              Container(
-                color: Colors.white,
-                padding: EdgeInsets.symmetric(
-                  horizontal: sx(36),
-                  vertical: sy(24),
-                ),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            game.title,
-                            style: TextStyle(
-                              color: _ink,
-                              fontSize: sy(32),
-                              fontWeight: FontWeight.w800,
-                              letterSpacing: -0.5,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(sy(28)),
+            side: BorderSide(color: _ink.withValues(alpha: 0.12), width: 1.3),
+          ),
+          child: InkWell(
+            onTap: () => _launchGame(game),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Expanded(child: game.artBuilder(sx, sy)),
+                Container(
+                  color: Colors.white,
+                  padding: EdgeInsets.symmetric(
+                    horizontal: sx(36),
+                    vertical: sy(24),
+                  ),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              game.title,
+                              style: TextStyle(
+                                color: _ink,
+                                fontSize: sy(32),
+                                fontWeight: FontWeight.w800,
+                                letterSpacing: -0.5,
+                              ),
                             ),
-                          ),
-                          SizedBox(height: sy(6)),
-                          Text(
-                            game.tagline,
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                            style: TextStyle(
-                              color: _ink.withValues(alpha: 0.55),
-                              fontSize: sy(20),
-                              fontWeight: FontWeight.w500,
+                            SizedBox(height: sy(6)),
+                            Text(
+                              game.tagline(l10n),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle(
+                                color: _ink.withValues(alpha: 0.55),
+                                fontSize: sy(20),
+                                fontWeight: FontWeight.w500,
+                              ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
-                    ),
-                    SizedBox(width: sx(24)),
-                    launching
-                        ? SizedBox(
-                            width: sy(36),
-                            height: sy(36),
-                            child: const CircularProgressIndicator(
-                              strokeWidth: 3,
-                              color: _ink,
+                      SizedBox(width: sx(24)),
+                      launching
+                          ? SizedBox(
+                              width: sy(36),
+                              height: sy(36),
+                              child: const CircularProgressIndicator(
+                                strokeWidth: 3,
+                                color: _ink,
+                              ),
+                            )
+                          : Container(
+                              width: sy(56),
+                              height: sy(56),
+                              decoration: const BoxDecoration(
+                                color: _ink,
+                                shape: BoxShape.circle,
+                              ),
+                              child: Icon(
+                                Icons.play_arrow_rounded,
+                                color: Colors.white,
+                                size: sy(36),
+                              ),
                             ),
-                          )
-                        : Container(
-                            width: sy(56),
-                            height: sy(56),
-                            decoration: const BoxDecoration(
-                              color: _ink,
-                              shape: BoxShape.circle,
-                            ),
-                            child: Icon(
-                              Icons.play_arrow_rounded,
-                              color: Colors.white,
-                              size: sy(36),
-                            ),
-                          ),
-                  ],
+                    ],
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),

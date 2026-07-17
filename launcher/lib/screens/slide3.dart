@@ -20,7 +20,6 @@ class Slide3Screen extends StatelessWidget {
       child: Stack(
         clipBehavior: Clip.hardEdge,
         children: [
-
           //Window
           Positioned(
             top: sy(21),

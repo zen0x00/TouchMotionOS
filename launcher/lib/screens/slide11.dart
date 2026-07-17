@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+
 class Slide11Screen extends StatelessWidget {
   const Slide11Screen({super.key});
 
@@ -19,7 +20,6 @@ class Slide11Screen extends StatelessWidget {
       child: Stack(
         clipBehavior: Clip.hardEdge,
         children: [
-
           //Lady11
           Positioned(
             top: sy(214),
@@ -67,7 +67,6 @@ class Slide11Screen extends StatelessWidget {
               fit: BoxFit.contain,
             ),
           ),
-
         ],
       ),
     );

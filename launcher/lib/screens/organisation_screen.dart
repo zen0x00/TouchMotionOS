@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../l10n/app_localizations.dart';
+import '../session.dart';
 import '../widgets/power_button.dart';
 import 'language_screen.dart';
 
@@ -20,10 +22,15 @@ class _OrganisationScreenState extends State<OrganisationScreen> {
 
   // TODO(backend): fetch patients for this organisation from the API.
   static const _patients = <String>[
-    'Asha Menon',
-    'Ravi Kumar',
-    'Meera Nair',
-    'Joseph Thomas',
+    'Aman Kumar M',
+    'Puviyarasu P',
+    'Aswin R',
+    'Karthick S',
+    'Sharon Rose L',
+    'Vishnu T U',
+    'Niveditha R',
+    'Eswar R M',
+    'Gowtham Raj VP',
   ];
 
   String? _selected;
@@ -47,13 +54,14 @@ class _OrganisationScreenState extends State<OrganisationScreen> {
   void _verify() {
     // TODO(backend): verify OTP against the API. Placeholder accepts 0000.
     if (_otp.join() == '0000') {
+      Session.patientName = _selected;
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(builder: (_) => const LanguageScreen()),
       );
     } else {
       setState(() {
         _otp.clear();
-        _error = 'That code didn\'t match. Try again.';
+        _error = AppLocalizations.of(context)!.otpError;
       });
     }
   }
@@ -64,6 +72,8 @@ class _OrganisationScreenState extends State<OrganisationScreen> {
     final screenH = MediaQuery.of(context).size.height;
     double sx(double val) => val * (screenW / 1920.0);
     double sy(double val) => val * (screenH / 1080.0);
+
+    final l10n = AppLocalizations.of(context)!;
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -78,7 +88,7 @@ class _OrganisationScreenState extends State<OrganisationScreen> {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   Text(
-                    'Who is playing today?',
+                    l10n.whoIsPlaying,
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       color: _ink,
@@ -89,7 +99,7 @@ class _OrganisationScreenState extends State<OrganisationScreen> {
                   ),
                   SizedBox(height: sy(12)),
                   Text(
-                    'Choose your name, then enter the code from your caregiver',
+                    l10n.chooseYourName,
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       color: _ink.withValues(alpha: 0.55),
@@ -115,7 +125,7 @@ class _OrganisationScreenState extends State<OrganisationScreen> {
                         value: _selected,
                         isExpanded: true,
                         hint: Text(
-                          'Select patient',
+                          l10n.selectPatient,
                           style: TextStyle(
                             color: _ink.withValues(alpha: 0.45),
                             fontSize: sy(26),

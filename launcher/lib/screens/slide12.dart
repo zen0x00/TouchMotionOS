@@ -6,10 +6,7 @@ class Slide12Screen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox.expand(
-      child: Image.asset(
-        'assets/slide12/slide12.png',
-        fit: BoxFit.cover,
-      ),
+      child: Image.asset('assets/slide12/slide12.png', fit: BoxFit.cover),
     );
   }
 }

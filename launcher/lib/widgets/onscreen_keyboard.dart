@@ -76,12 +76,7 @@ class _OnscreenKeyboardState extends State<OnscreenKeyboard> {
               ),
             _key(label: 'space', flex: 5, onTap: () => widget.onKey(' ')),
             _key(label: '⌫', flex: 2, onTap: widget.onBackspace),
-            _key(
-              label: 'done',
-              flex: 3,
-              filled: true,
-              onTap: widget.onSubmit,
-            ),
+            _key(label: 'done', flex: 3, filled: true, onTap: widget.onSubmit),
           ],
         ),
       ],
@@ -103,8 +98,8 @@ class _OnscreenKeyboardState extends State<OnscreenKeyboard> {
           color: filled
               ? _ink
               : active
-                  ? const Color(0xFFE3CDF6)
-                  : const Color(0xFFF4F4F6),
+              ? const Color(0xFFE3CDF6)
+              : const Color(0xFFF4F4F6),
           borderRadius: BorderRadius.circular(10),
           child: InkWell(
             borderRadius: BorderRadius.circular(10),

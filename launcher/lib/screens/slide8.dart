@@ -20,7 +20,6 @@ class Slide8Screen extends StatelessWidget {
       child: Stack(
         clipBehavior: Clip.hardEdge,
         children: [
-
           //Tip8
           Positioned(
             top: sy(111),
@@ -58,7 +57,6 @@ class Slide8Screen extends StatelessWidget {
               ),
             ),
           ),
-
         ],
       ),
     );

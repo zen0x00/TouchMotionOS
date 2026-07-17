@@ -20,7 +20,6 @@ class Slide2Screen extends StatelessWidget {
       child: Stack(
         clipBehavior: Clip.hardEdge,
         children: [
-
           //Window2
           Positioned(
             top: sy(2),
@@ -134,10 +133,7 @@ class Slide2Screen extends StatelessWidget {
             top: sy(982),
             left: 0,
             right: 0,
-            child: Container(
-              height: 7,
-              color: Colors.black.withOpacity(0.15),
-            ),
+            child: Container(height: 7, color: Colors.black.withOpacity(0.15)),
           ),
         ],
       ),

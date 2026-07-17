@@ -9,7 +9,8 @@ import 'dart:io';
 /// again.
 class OnboardingState {
   static File get _marker {
-    final dataHome = Platform.environment['XDG_DATA_HOME'] ??
+    final dataHome =
+        Platform.environment['XDG_DATA_HOME'] ??
         '${Platform.environment['HOME'] ?? '/tmp'}/.local/share';
     return File('$dataHome/tomoro/onboarding_done');
   }

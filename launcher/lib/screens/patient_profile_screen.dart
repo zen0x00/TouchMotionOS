@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../l10n/app_localizations.dart';
+import '../session.dart';
 import '../widgets/power_button.dart';
 import 'home_screen.dart';
 import 'physio_screen.dart';
@@ -16,18 +18,36 @@ class PatientProfileScreen extends StatelessWidget {
   static const _lavenderDeep = Color(0xFFE3CDF6);
 
   // TODO(backend): fetch routine, prescription and suggestions from the API.
-  static const _weekdays = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
   static const _routineDone = [true, true, false, false, false, false, false];
-  static const _prescription = [
-    ('Sky Hopper', '10 minutes — arm raises'),
-    ('Cat Nap Chase', '5 minutes — balance and reach'),
-    ('Dashlands', '10 minutes — step in place'),
+
+  static List<String> _weekdays(AppLocalizations l10n) => [
+    l10n.mon,
+    l10n.tue,
+    l10n.wed,
+    l10n.thu,
+    l10n.fri,
+    l10n.sat,
+    l10n.sun,
   ];
-  static const _suggestions = [
-    'Great streak! Two days in a row.',
-    'Try slower, fuller arm raises today.',
-    'Drink water before you start.',
+
+  static List<(String, String)> _prescription(AppLocalizations l10n) => [
+    ('Sky Hopper', l10n.presSkyHopper),
+    ('Cat Nap Chase', l10n.presCatNap),
+    ('Dashlands', l10n.presDashlands),
   ];
+
+  static List<String> _suggestions(AppLocalizations l10n) => [
+    l10n.sugg1,
+    l10n.sugg2,
+    l10n.sugg3,
+  ];
+
+  static String _greeting(AppLocalizations l10n, String name) {
+    final hour = DateTime.now().hour;
+    if (hour < 12) return l10n.goodMorningName(name);
+    if (hour < 17) return l10n.goodAfternoonName(name);
+    return l10n.goodEveningName(name);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -37,6 +57,7 @@ class PatientProfileScreen extends StatelessWidget {
     double sy(double val) => val * (screenH / 1080.0);
 
     final today = DateTime.now().weekday - 1;
+    final l10n = AppLocalizations.of(context)!;
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -61,7 +82,7 @@ class PatientProfileScreen extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        'Hello, Asha!',
+                        _greeting(l10n, Session.firstName),
                         style: TextStyle(
                           color: _ink,
                           fontSize: sy(56),
@@ -70,7 +91,7 @@ class PatientProfileScreen extends StatelessWidget {
                         ),
                       ),
                       Text(
-                        'Something beautiful is waiting for you today',
+                        l10n.somethingBeautiful,
                         style: TextStyle(
                           color: _ink.withValues(alpha: 0.55),
                           fontSize: sy(24),
@@ -93,7 +114,7 @@ class PatientProfileScreen extends StatelessWidget {
             child: _card(
               sx,
               sy,
-              title: 'Your week',
+              title: l10n.yourWeek,
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: List.generate(7, (i) {
@@ -102,12 +123,13 @@ class PatientProfileScreen extends StatelessWidget {
                   return Column(
                     children: [
                       Text(
-                        _weekdays[i],
+                        _weekdays(l10n)[i],
                         style: TextStyle(
                           color: _ink.withValues(alpha: isToday ? 1 : 0.45),
                           fontSize: sy(22),
-                          fontWeight:
-                              isToday ? FontWeight.w800 : FontWeight.w500,
+                          fontWeight: isToday
+                              ? FontWeight.w800
+                              : FontWeight.w500,
                         ),
                       ),
                       SizedBox(height: sy(12)),
@@ -125,8 +147,11 @@ class PatientProfileScreen extends StatelessWidget {
                           ),
                         ),
                         child: done
-                            ? Icon(Icons.check,
-                                color: Colors.white, size: sy(32))
+                            ? Icon(
+                                Icons.check,
+                                color: Colors.white,
+                                size: sy(32),
+                              )
                             : null,
                       ),
                     ],
@@ -144,10 +169,10 @@ class PatientProfileScreen extends StatelessWidget {
             child: _card(
               sx,
               sy,
-              title: "Today's routine",
+              title: l10n.todaysRoutine,
               child: Column(
                 children: [
-                  for (final (name, detail) in _prescription)
+                  for (final (name, detail) in _prescription(l10n))
                     Padding(
                       padding: EdgeInsets.symmetric(vertical: sy(10)),
                       child: Row(
@@ -159,8 +184,11 @@ class PatientProfileScreen extends StatelessWidget {
                               color: _lavenderDeep,
                               shape: BoxShape.circle,
                             ),
-                            child: Icon(Icons.sports_esports_outlined,
-                                color: _ink, size: sy(26)),
+                            child: Icon(
+                              Icons.sports_esports_outlined,
+                              color: _ink,
+                              size: sy(26),
+                            ),
                           ),
                           SizedBox(width: sx(24)),
                           Expanded(
@@ -205,19 +233,21 @@ class PatientProfileScreen extends StatelessWidget {
                 _card(
                   sx,
                   sy,
-                  title: 'Suggestions',
+                  title: l10n.suggestions,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      for (final s in _suggestions)
+                      for (final s in _suggestions(l10n))
                         Padding(
                           padding: EdgeInsets.symmetric(vertical: sy(8)),
                           child: Row(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Icon(Icons.auto_awesome,
-                                  color: _ink.withValues(alpha: 0.4),
-                                  size: sy(24)),
+                              Icon(
+                                Icons.auto_awesome,
+                                color: _ink.withValues(alpha: 0.4),
+                                size: sy(24),
+                              ),
                               SizedBox(width: sx(16)),
                               Expanded(
                                 child: Text(
@@ -256,7 +286,7 @@ class PatientProfileScreen extends StatelessWidget {
                         SizedBox(width: sx(20)),
                         Expanded(
                           child: Text(
-                            'Contact my physio',
+                            l10n.contactPhysio,
                             style: TextStyle(
                               color: _ink,
                               fontSize: sy(26),
@@ -295,11 +325,14 @@ class PatientProfileScreen extends StatelessWidget {
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Icon(Icons.play_arrow_rounded,
-                          color: Colors.white, size: sy(36)),
+                      Icon(
+                        Icons.play_arrow_rounded,
+                        color: Colors.white,
+                        size: sy(36),
+                      ),
                       SizedBox(width: sx(16)),
                       Text(
-                        'Start Today',
+                        l10n.startToday,
                         style: TextStyle(
                           color: Colors.white,
                           fontSize: sy(30),

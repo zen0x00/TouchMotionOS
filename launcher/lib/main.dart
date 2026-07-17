@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'l10n/app_localizations.dart';
 import 'onboarding_state.dart';
+import 'session.dart';
 import 'widgets/power_button.dart';
 import 'screens/organisation_screen.dart';
 import 'screens/slide1.dart';
@@ -26,13 +28,41 @@ void main() {
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
+  /// Bundled Noto Sans with per-script fallbacks so every supported
+  /// language renders from known font files instead of whatever fontconfig
+  /// resolves on the device.
+  static const _fontFallback = <String>[
+    'NotoSansDevanagari',
+    'NotoSansTamil',
+    'NotoSansTelugu',
+    'NotoSansMalayalam',
+    'NotoSansKannada',
+  ];
+
+  static ThemeData _theme() {
+    final base = ThemeData(useMaterial3: true, fontFamily: 'NotoSans');
+    return base.copyWith(
+      textTheme: base.textTheme.apply(fontFamilyFallback: _fontFallback),
+      primaryTextTheme: base.primaryTextTheme.apply(
+        fontFamilyFallback: _fontFallback,
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: OnboardingState.isDone
-          ? const OrganisationScreen()
-          : const OnboardingScreen(),
+    return ValueListenableBuilder<Locale>(
+      valueListenable: Session.locale,
+      builder: (context, locale, _) => MaterialApp(
+        debugShowCheckedModeBanner: false,
+        locale: locale,
+        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        supportedLocales: AppLocalizations.supportedLocales,
+        theme: _theme(),
+        home: OnboardingState.isDone
+            ? const OrganisationScreen()
+            : const OnboardingScreen(),
+      ),
     );
   }
 }
@@ -86,11 +116,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
           ),
 
           // Power button
-          Positioned(
-            top: 16,
-            right: 16,
-            child: const PowerButton(),
-          ),
+          Positioned(top: 16, right: 16, child: const PowerButton()),
 
           // Back arrow
           if (_page > 0)

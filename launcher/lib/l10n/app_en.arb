@@ -1,0 +1,111 @@
+{
+  "@@locale": "en",
+  "power": "Power",
+  "powerQuestion": "What would you like to do?",
+  "restart": "Restart",
+  "powerOff": "Power off",
+  "cancel": "Cancel",
+  "close": "Close",
+  "continueLabel": "Continue",
+
+  "goodMorning": "Good morning!",
+  "goodAfternoon": "Good afternoon!",
+  "goodEvening": "Good evening!",
+  "pickAGame": "Pick a game and get moving",
+  "library": "Library",
+  "tapCardToPlay": "Tap a card to play",
+  "notInstalled": "{gameTitle} is not installed yet",
+  "@notInstalled": {
+    "placeholders": {
+      "gameTitle": { "type": "String" }
+    }
+  },
+  "contactPhysio": "Contact my physio",
+  "settings": "Settings",
+  "taglineSkyHopper": "Flap through the city — one hop at a time",
+  "taglineCatNap": "Keep the cat awake with your best moves",
+  "taglineDashlands": "Dash, jump, and race across the lands",
+
+  "whoIsPlaying": "Who is playing today?",
+  "chooseYourName": "Choose your name, then enter the code from your caregiver",
+  "selectPatient": "Select patient",
+  "otpError": "That code didn't match. Try again.",
+
+  "chooseLanguage": "Choose your language",
+  "voiceGuideHint": "The voice guide will speak to you in this language",
+
+  "goodMorningName": "Good morning, {name}!",
+  "@goodMorningName": {
+    "placeholders": {
+      "name": { "type": "String" }
+    }
+  },
+  "goodAfternoonName": "Good afternoon, {name}!",
+  "@goodAfternoonName": {
+    "placeholders": {
+      "name": { "type": "String" }
+    }
+  },
+  "goodEveningName": "Good evening, {name}!",
+  "@goodEveningName": {
+    "placeholders": {
+      "name": { "type": "String" }
+    }
+  },
+  "somethingBeautiful": "Something beautiful is waiting for you today",
+  "yourWeek": "Your week",
+  "todaysRoutine": "Today's routine",
+  "suggestions": "Suggestions",
+  "startToday": "Start Today",
+  "mon": "Mon",
+  "tue": "Tue",
+  "wed": "Wed",
+  "thu": "Thu",
+  "fri": "Fri",
+  "sat": "Sat",
+  "sun": "Sun",
+  "presSkyHopper": "10 minutes — arm raises",
+  "presCatNap": "5 minutes — balance and reach",
+  "presDashlands": "10 minutes — step in place",
+  "sugg1": "Great streak! Two days in a row.",
+  "sugg2": "Try slower, fuller arm raises today.",
+  "sugg3": "Drink water before you start.",
+
+  "physioAssigned": "Dr. Priya Sharma — your assigned physiotherapist",
+  "consultNow": "Consult now",
+  "consultNowSub": "Ask a question or report how you feel",
+  "bookAppointment": "Book appointment",
+  "bookAppointmentSub": "Pick a time that suits you",
+  "consultRequested": "Consult requested",
+  "appointmentRequested": "Appointment requested",
+  "physioNotified": "{action} — your physio will be notified",
+  "@physioNotified": {
+    "placeholders": {
+      "action": { "type": "String" }
+    }
+  },
+
+  "network": "Network",
+  "online": "Online",
+  "offline": "Offline",
+  "connected": "Connected",
+  "notConnected": "Not connected",
+  "cableUnplugged": "Cable unplugged",
+  "linkUpNoAddress": "Link up, no address",
+  "scan": "Scan",
+  "scanning": "Scanning for networks…",
+  "noNetworksFound": "No networks found",
+  "noNetworkHardware": "No network hardware detected",
+  "networkServiceUnavailable": "Network service unavailable",
+  "scanFailed": "Scan failed — network service unavailable",
+  "connectionFailed": "Connection failed — network service unavailable",
+  "enterPassword": "Enter password",
+  "passwordFor": "Password for \"{ssid}\"",
+  "@passwordFor": {
+    "placeholders": {
+      "ssid": { "type": "String" }
+    }
+  },
+  "wifi": "Wi-Fi",
+  "ethernet": "Ethernet"
+}

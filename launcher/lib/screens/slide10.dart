@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+
 class Slide10Screen extends StatelessWidget {
   const Slide10Screen({super.key});
 
@@ -19,7 +20,6 @@ class Slide10Screen extends StatelessWidget {
       child: Stack(
         clipBehavior: Clip.hardEdge,
         children: [
-
           //Clock10
           Positioned(
             top: sy(74.86),
@@ -67,7 +67,6 @@ class Slide10Screen extends StatelessWidget {
             ),
           ),
 
-
           //line
           Positioned(
             top: sy(896),
@@ -78,7 +77,6 @@ class Slide10Screen extends StatelessWidget {
               color: Colors.black.withOpacity(0.15),
             ),
           ),
-
         ],
       ),
     );
